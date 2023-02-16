@@ -5,7 +5,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 #Import multiple sheets into the R
-
+library(tidyverse)
 # importing required packages
 library(readxl)    
 multiplesheets <- function(fname) {
@@ -33,5 +33,15 @@ SMOG <- multiplesheets(path)$SMOG
 DISCERN <- multiplesheets(path)$DISCERN
 Content <- multiplesheets(path)$Content
 
+
+```
+
+```{r}
+data <-full_join(Demographics,FLESCH) %>% 
+  full_join(SMOG) %>% 
+  full_join(DISCERN) %>% 
+  full_join(Content)
+
+data
 ```
 
