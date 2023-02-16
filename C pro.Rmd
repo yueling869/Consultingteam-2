@@ -1,28 +1,37 @@
 ---
-title: "C pro"
+title:"pro1"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+#Import multiple sheets into the R
+
+# importing required packages
+library(readxl)    
+multiplesheets <- function(fname) {
+   
+  # getting info about all excel sheets
+  sheets <- readxl::excel_sheets(fname)
+  tibble <- lapply(sheets, function(x) readxl::read_excel(fname, sheet = x))
+  data_frame <- lapply(tibble, as.data.frame)
+    
+  # assigning names to data frames
+  names(data_frame) <- sheets
+    
+  # print data frame
+  print(data_frame)
+}
+  
+# specifying the path name
+path <- "~/Desktop/SMA Capstone Master Doc.xlsx"
+multiplesheets(path)
+
+# Extract the data sheets
+Demographics <- multiplesheets(path)$Demographics
+FLESCH<- multiplesheets(path)$FLESCH
+SMOG <- multiplesheets(path)$SMOG
+DISCERN <- multiplesheets(path)$DISCERN
+Content <- multiplesheets(path)$Content
+
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
