@@ -33,15 +33,36 @@ SMOG <- multiplesheets(path)$SMOG
 DISCERN <- multiplesheets(path)$DISCERN
 Content <- multiplesheets(path)$Content
 
+Demographics
 
 ```
 
 ```{r}
-data <-full_join(Demographics,FLESCH) %>% 
-  full_join(SMOG) %>% 
-  full_join(DISCERN) %>% 
-  full_join(Content)
+data <- full_join(FLESCH,SMOG,by = 'URL',)
+              
+  full_join(SMOG, by = c ("Hospital"="Hospitals") )%>% 
+  full_join(DISCERN, by = "Hospital") %>% 
+  full_join(Content, by = "Hospital")
+  
+data.1 <- cbind(FLESCH,SMOG,DISCERN,Content)
+summary(data.1)
 
-data
+data.1
+
+```
+
+
+```{r}
+##missing data checking
+data.1 <- data.1 [,c(-4,-5,-16,-17,-37,-38)]
+
+library(naniar)
+vis_miss(data.1)
+gg_miss_var(data.1)
+```
+
+
+```{r}
+
 ```
 
