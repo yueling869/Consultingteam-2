@@ -38,12 +38,6 @@ Demographics
 ```
 
 ```{r}
-data <- full_join(FLESCH,SMOG,by = 'URL',)
-              
-  full_join(SMOG, by = c ("Hospital"="Hospitals") )%>% 
-  full_join(DISCERN, by = "Hospital") %>% 
-  full_join(Content, by = "Hospital")
-  
 data.1 <- cbind(FLESCH,SMOG,DISCERN,Content)
 summary(data.1)
 
@@ -55,14 +49,27 @@ data.1
 ```{r}
 ##missing data checking
 data.1 <- data.1 [,c(-4,-5,-16,-17,-37,-38)]
-
+data.1
 library(naniar)
-vis_miss(data.1)
-gg_miss_var(data.1)
+vis_miss(data.1)+theme(text = element_text(size = 6))    
+gg_miss_var(data.1)+theme(text = element_text(size = 6))         
 ```
-
+The missingness plots show that the date set is missing 31.6% of the data and for most of the varaibles, 10 rows of data is missing.
 
 ```{r}
+##scatter plot for smog and flesch
+
+plot(data.1$`SMOG #`~ data.1$FKRA,xlab="FKRA",ylab="SMOG", main = "Comparison of SMOG and FLESCH",col='pink')
+abline(lm(data.1$`SMOG #`~ data.1$FKRA),col="pink")
+
+plot(data.1$`Grade Level`~ data.1$FKRA,xlab="FKRA",ylab="Grade level",main = "Comparison of SMOG and FLESCH",col='blue')
+abline(lm(data.1$`Grade Level`~ data.1$FKRA),col="blue")
+
+```
+
+```{r}
+##boxplot visualization
+
 
 ```
 
