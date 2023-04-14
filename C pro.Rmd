@@ -41,7 +41,7 @@ Demographics
 data.1 <- cbind(FLESCH,SMOG,DISCERN,Content)
 summary(data.1)
 
-data.1
+head(data.1)
 
 ```
 
@@ -68,7 +68,68 @@ abline(lm(data.1$`Grade Level`~ data.1$FKRA),col="blue")
 ```
 
 ```{r}
-##boxplot visualization
+##relation between whether treatment are described vs grade level
+library(naniar)
+figure1 <- ggplot(data.1, aes(x= Summary, y=`Grade Level`)) + geom_point()+ geom_miss_point()+geom_abline()
+figure1 
+
+##treatment of interest vs reading level
+figure2 <- ggplot(data.1, aes(x= `Treatments of Interest`, y=FKRA)) + geom_point()+ geom_miss_point()+geom_abline()
+figure2 
+library(ggpubr)
+ggscatter(data.2, x = "Treatments of Interest", y = "FKRA", add = "reg.line", conf.int = TRUE, cor.coef = TRUE, cor.method = "pearson", cor.coeff.args = list(size = 5))
+```
+
+
+```{r}
+##whether number of treatments match with SMA list
+Demographics
+data.1$`total number of treatments` <- data.1$Spinraza+data.1$Zolgensma + data.1$Evrysdi
+library(dplyr)
+colnames(Demographics)[1] <- "Hospital"
+Demographics
+data.2 <- merge(data.1, Demographics, by = "Hospital")
+data.2
+figure3 <- ggplot(data.2, aes(x=`Does this match CURE SMA List?`, y=`total number of treatments`)) + geom_point()+ geom_miss_point()+ geom_abline()
+figure3 
+
+
+figure4 <- ggplot(data.2, aes(x=`Cure SMA Care Center`, y=`Total Number of Treatments`)) + geom_point()+ geom_miss_point()+ geom_abline()
+figure4 
+
+```
+
+```{r}
+##region differences between treatment of interest and reading levels.
+data.2$State
+figure5 <- ggplot(data.2, aes(x= `Treatments of Interest`, y=FKRA)) + geom_point()+ geom_miss_point()+facet_grid(~State)
+figure5 + theme(axis.text.x = element_text(size = 10, angle = 10, hjust = 1))
+
+
+cor.figure1 <- ggscatter(data.2, x = "Treatments of Interest", y = "FKRA", add = "reg.line", conf.int = TRUE, cor.coef = TRUE, cor.method = "pearson", cor.coeff.args = list(size = 5))+facet_wrap(~ State)+theme(text = element_text(size=8))
+cor.figure1
+
+##include only state which shows correlation 
+
+library(dplyr)
+data.3 <- data.2[data.2$State %in% c("CA", "IL", "MA", "OH", "VA"), ]
+
+figure5.1 <- ggplot(data.3, aes(x= `Treatments of Interest`, y=FKRA)) + geom_point()+ geom_miss_point()+facet_grid(~State)
+figure5.1 + theme(axis.text.x = element_text(size = 10, angle = 10, hjust = 1))
+
+
+cor.figure1.1 <- ggscatter(data.3, x = "Treatments of Interest", y = "FKRA", add = "reg.line", conf.int = TRUE, cor.coef = TRUE, cor.method = "pearson", cor.coeff.args = list(size = 5))+facet_wrap(~ State)+theme(text = element_text(size=8))
+cor.figure1.1
+
+
+##by urban
+
+figure6 <- ggplot(data.2, aes(x= `Treatments of Interest`, y=FKRA)) + geom_point()+ geom_miss_point()+facet_grid(~`Rural/Suburban/Urban`)
+figure6
+
+cor.figure2 <- ggscatter(data.2, x = "Treatments of Interest", y = "FKRA", add = "reg.line", conf.int = TRUE, cor.coef = TRUE, cor.method = "pearson", cor.coeff.args = list(size = 5))+facet_wrap(~ `Rural/Suburban/Urban`)+theme(text = element_text(size=8))
+cor.figure2
+
 
 
 ```
